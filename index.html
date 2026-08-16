@@ -374,12 +374,23 @@ function buildMannequin() {
   const legHeight = 0.85 * scales.leg;
   const legTopY = 0.275;
   const legCenterY = legTopY - legHeight / 2;
+  // 兩腿的左右間距（legX）改成跟著臀圍縮放，不再是寫死的0.13——原本不管
+  // 腰圍/臀圍怎麼調，兩腿間距都不變，腰圍調很小的時候，上半身窄下去了，
+  // 兩條腿卻還是原本的寬度，看起來像腿比身體還寬、卡在身體外面，使用者
+  // 覺得「詭異」是對的。改成legX = 0.13 * scales.hip後，體型窄（臀圍小）
+  // 兩腿會自然收窄靠攏，體型寬則兩腿分開一點，跟身體寬度連動；預設臀圍
+  // (90cm)時scales.hip=1，legX=0.13，跟原本數字完全一樣，不影響預設外觀。
+  // buildBottom()裡褲子的legX、裙子的腿部涵蓋margin都要用同一個公式，
+  // 否則褲管/裙子的位置又會跟骨架腿對不齊。
+  const legX = 0.13 * scales.hip;
+  window.__geo = window.__geo || {};
+  window.__geo.legX = legX; // 讓buildBottom()共用同一個腿間距，見上面說明
   [-1, 1].forEach((side) => {
     const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, legHeight, 10), skinMat);
-    leg.position.set(side * 0.13, legCenterY, 0);
+    leg.position.set(side * legX, legCenterY, 0);
     mannequin.add(leg);
     const foot = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.06, 0.2), skinMat);
-    foot.position.set(side * 0.13, legCenterY - legHeight / 2 - 0.025, 0.06);
+    foot.position.set(side * legX, legCenterY - legHeight / 2 - 0.025, 0.06);
     mannequin.add(foot);
   });
  
@@ -501,11 +512,24 @@ function buildTop() {
  
   const scales = getScales();
   const isHoodie = topShape === 'hoodie';
-  const baseRTop = isHoodie ? 0.24 : 0.22;
-  const baseRBottom = isHoodie ? 0.29 : 0.26;
   const torsoHeight = isHoodie ? 0.74 : 0.7;
-  const rTop = baseRTop * scales.bust;
-  const rBottom = baseRBottom * scales.waist;
+  // 修正「胸圍腰圍打一樣/打成腰圍<胸圍，結果腰圍那端還是比較粗」的bug：
+  // 舊公式是 baseRTop*scales.bust 跟 baseRBottom*scales.waist，兩個scales
+  // 各自除以不同的基準值（84 vs 68）、又各自乘上不同的基礎半徑
+  // （0.22 vs 0.26，原本想做出下擺外擴的A字剪裁），這兩層疊在一起，
+  // 導致幾乎任何「胸圍>腰圍」的正常輸入，下擺半徑還是會大於胸圍半徑
+  // ——等於腰圍這個參數的視覺效果一直被那個寫死的A字外擴蓋過去，使用者
+  // 打進去的相對大小關係沒有真的反映在形狀上。
+  // 改成兩端用同一個cm→半徑換算率（BUST_WAIST_RATE，直接用原始cm數字，
+  // 不再各自除不同基準值），再加同一個GARMENT_EASE（同一個數字，不是
+  // 「下擺多加一點」）——這樣兩個measurement只要輸入數字一樣，算出來的
+  // 半徑就真的一樣（水桶狀）；只要有差距，形狀就會照實際數字比例反映
+  // 出來，不會被隱藏的外擴設計蓋掉。GARMENT_EASE是給衣服一點寬鬆度用的
+  // （不會整件貼身到像穿了保鮮膜），連帽外套版型較寬鬆所以多給一點。
+  const BUST_WAIST_RATE = 0.22 / BASE_BODY.bust; // 錨定在胸圍預設值(84cm)算出0.22，維持預設外觀不突然跳掉
+  const GARMENT_EASE = isHoodie ? 0.04 : 0.02;
+  const rTop = BUST_WAIST_RATE * bodyParams.bust + GARMENT_EASE;
+  const rBottom = BUST_WAIST_RATE * bodyParams.waist + GARMENT_EASE;
  
   // 記錄上衣下擺半徑，供buildBottom()把「褲頭/裙頭」半徑跟這個對齊——見
   // buildBottom()裡的說明，這是修「長裙穿模」那個bug用的。
@@ -704,10 +728,13 @@ function buildBottom() {
     window.__geo = window.__geo || {};
     window.__geo.pantsLeg = { rTop, rBottom, height: legHeight, topY: 0.55, style: bottomStyle };
  
-    // 褲管的x位置要跟buildMannequin()裡骨架腿的x位置(0.13)對齊，否則兩個圓柱體
+    // 褲管的x位置要跟buildMannequin()裡骨架腿的x位置對齊，否則兩個圓柱體
     // 中心點沒對準，半徑差距小的剪裁會露出一截外側的腿——這正是上一輪窄褲
-    // 外側穿幫的原因，這裡統一用同一個常數避免兩處數字各自維護、對不齊。
-    const legX = 0.13;
+    // 外側穿幫的原因。骨架腿的x位置現在改成跟臀圍縮放（見buildMannequin，
+    // 修「腰圍小時兩腿超出身體範圍」那個問題），這裡直接讀
+    // window.__geo.legX共用同一個數字，不要自己重算一份常數，否則兩邊
+    // 各自維護又會對不齊。
+    const legX = window.__geo.legX || 0.13;
  
     [-1, 1].forEach((side) => {
       if (bottomPhotoReady) {
@@ -800,6 +827,25 @@ function buildBottom() {
     // 蓋住或至少貼齊上衣下擺」，不會有內縮的段差，不管身材參數怎麼組合。
     if (window.__geo.topBottomR) rTop = Math.max(rTop, window.__geo.topBottomR);
     rBottom = Math.max(rBottom, rTop); // 裙擺理當不會比裙頭窄，保底避免退化成倒圓錐
+    // 第二個「穿模」bug，跟上面接縫那個是不同成因：褲子的骨架腿（skinLeg）
+    // 是兩根分開的圓柱體，中心點在x=±legX、半徑0.06~0.07——褲子當初有針對
+    // 這點做「coverMargin」保底（見上面pants那段），裙子當初沒有比照做，
+    // 是漏掉的。上一輪把胸圍/腰圍公式改成比較合身的版型後，裙子的rTop/
+    // rBottom普遍變小，一旦小到不夠涵蓋兩條腿分開的寬度，裙子中段就會看到
+    // 兩腿之間的縫隙從裙子表面透出來，形成使用者截圖裡那個三角形缺口。
+    // 這裡的legX（見buildMannequin）已經改成跟臀圍縮放，所以這個下限
+    // 現在也要用同一個legX去算，不能再寫死0.13——寫死的話，臀圍調小、
+    // 兩腿收窄了，這個下限卻沒有跟著變小，反而會變成「臀圍不管怎麼調，
+    // 裙子半徑都被這個下限卡住、看起來完全沒反應」，這正是使用者這次
+    // 回報的「臀圍沒有任何作用，裙子變水桶」——上一版的margin抓太保守，
+    // 把臀圍可用的調整範圍幾乎整個蓋掉了。改成legX動態代入後，下限會
+    // 隨臀圍一起縮放，只在真的會穿模的極端值才會頂到下限，中間大部分
+    // 範圍臀圍都能正常看到效果。
+    const skinLegR = 0.07; // 骨架腿頂端半徑
+    const skirtLegMargin = 0.015; // 安全邊界縮小，避免蓋掉臀圍中段的可調範圍
+    const minSkirtR = window.__geo.legX + skinLegR + skirtLegMargin;
+    rTop = Math.max(rTop, minSkirtR);
+    rBottom = Math.max(rBottom, minSkirtR, rTop);
     const posY = 0.55 - height / 2;
  
     // 除錯用（不影響畫面）：暴露目前裙子的實際尺寸給自動化檢查腳本用
