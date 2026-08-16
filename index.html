@@ -16,7 +16,7 @@
   }
   h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
   p.sub { color: #666; font-size: 14px; margin-top: 0; margin-bottom: 20px; }
- 
+
   #canvas-container {
     background: #fff;
     border: 1px solid #e5e5e3;
@@ -28,7 +28,7 @@
     overflow: hidden;
   }
   #canvas-container:active { cursor: grabbing; }
- 
+
   .section-label { font-size: 13px; color: #888; margin: 16px 0 6px; }
   .section-label.sub-label { margin-top: 8px; color: #aaa; }
   .swatch-row { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -37,7 +37,7 @@
     border: 1px solid #ccc; cursor: pointer;
   }
   .swatch.active { outline: 2px solid #2c2c2a; outline-offset: 2px; }
- 
+
   .shape-toggle { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
   .shape-toggle button {
     flex: 1 1 auto; min-width: 70px; padding: 9px 10px; border-radius: 8px;
@@ -46,17 +46,17 @@
   }
   .shape-toggle button.active { background: #2c2c2a; color: #fff; border-color: #2c2c2a; }
   .shape-toggle button:disabled { opacity: 0.4; cursor: not-allowed; }
- 
+
   .note { font-size: 12px; color: #aaa; margin-top: 4px; line-height: 1.5; }
   .note.warn { color: #b5793a; }
   .note.ok { color: #4a7a58; }
- 
+
   .body-params { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
   .body-params label { font-size: 12px; color: #666; display: flex; flex-direction: column; gap: 4px; }
   .body-params input[type=number] {
     padding: 7px 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; width: 100%;
   }
- 
+
   .photo-upload-row { display: flex; gap: 10px; margin-top: 8px; }
   .photo-slot {
     flex: 1; font-size: 12px; color: #666; border: 1px dashed #ccc; border-radius: 8px;
@@ -70,9 +70,9 @@
   }
   .clear-photo-btn:hover { color: #b5793a; border-color: #b5793a; }
   .photo-slot-status { font-size: 11px; color: #4a7a58; min-height: 14px; }
- 
+
   #hint { text-align: center; font-size: 13px; color: #999; margin-top: 14px; margin-bottom: 30px; }
- 
+
   /* 裁切/對齊浮層：每次上傳照片都會先跳出來，讓使用者自己框出衣服的實際
      範圍（衣領頂上緣、袖口頂左右緣、下擺頂下緣），框好的範圍會被拉伸貼滿
      人偶軀幹/褲管的貼圖範圍，比例才會對，衣服才會「穿」得像。 */
@@ -101,17 +101,17 @@
 </style>
 </head>
 <body>
- 
+
 <h1>3D人偶穿搭預覽 - 測試版</h1>
 <p class="sub">純幾何形狀渲染，零AI算力消耗，即時互動。雙擊本檔案即可開啟。</p>
- 
+
 <div id="canvas-container"></div>
 <div class="crop-zoom-row" id="viewZoomRow">
   <button type="button" id="viewZoomOut">－</button>
   <span style="font-size:13px;color:#888;">畫面縮放（滑鼠滾輪也可）</span>
   <button type="button" id="viewZoomIn">＋</button>
 </div>
- 
+
 <div class="section-label">身材參數（等比例縮放，非3D掃描/人體重建）</div>
 <div class="body-params">
   <label>身高 (cm)<input type="number" id="bp-height" value="165" min="120" max="200"></label>
@@ -121,13 +121,13 @@
   <label>肩寬 (cm)<input type="number" id="bp-shoulder" value="38" min="28" max="52"></label>
   <label>腿長 (cm)<input type="number" id="bp-leg" value="90" min="50" max="110"></label>
 </div>
- 
+
 <div class="section-label">膚色</div>
 <div class="swatch-row" id="skinColors"></div>
- 
+
 <div class="section-label">上衣顏色（無照片時使用，純素色）</div>
 <div class="swatch-row" id="topColors"></div>
- 
+
 <div class="section-label sub-label">上衣照片（正面＋背面，優先於素色）</div>
 <div class="photo-upload-row">
   <label class="photo-slot">正面
@@ -142,7 +142,7 @@
   </label>
 </div>
 <p class="note" id="topPhotoNote">選好照片後會跳出框選畫面，請框緊衣服的實際範圍（衣領頂上緣/袖口頂左右緣/下擺頂下緣），框住的內容會直接整個包覆貼到人偶身上（不會另外去背），所以框的時候盡量不要留背景在框內；兩面都框選完成才會啟用照片模式，否則使用素色模式</p>
- 
+
 <div class="section-label">上衣剪裁</div>
 <div class="shape-toggle" id="topShapeToggle">
   <button data-shape="short" class="active">短袖上衣</button>
@@ -150,10 +150,10 @@
   <button data-shape="shirt">襯衫</button>
   <button data-shape="hoodie">連帽外套</button>
 </div>
- 
+
 <div class="section-label">下著顏色（無照片時使用，純素色）</div>
 <div class="swatch-row" id="bottomColors"></div>
- 
+
 <div class="section-label sub-label">下著照片（正面＋背面，優先於素色）</div>
 <div class="photo-upload-row">
   <label class="photo-slot">正面
@@ -168,18 +168,18 @@
   </label>
 </div>
 <p class="note" id="bottomPhotoNote">選好照片後會跳出框選畫面，請框緊衣服的實際範圍（衣領頂上緣/袖口頂左右緣/下擺頂下緣），框住的內容會直接整個包覆貼到人偶身上（不會另外去背），所以框的時候盡量不要留背景在框內；兩面都框選完成才會啟用照片模式，否則使用素色模式</p>
- 
+
 <div class="section-label">下著類型</div>
 <div class="shape-toggle" id="bottomCategoryToggle">
   <button data-cat="pants" class="active">褲子</button>
   <button data-cat="skirt">裙子</button>
 </div>
- 
+
 <div class="section-label sub-label">下著剪裁</div>
 <div class="shape-toggle" id="bottomStyleToggle"></div>
- 
+
 <p id="hint">拖曳畫面可自由360度旋轉</p>
- 
+
 <div id="cropOverlay">
   <div class="crop-panel">
     <p class="crop-title">紅色輪廓是衣服的參考形狀，固定不動。請拖曳照片本身對齊輪廓（滾輪或+/-可縮放）：領口對齊領口、袖口/褲管對齊兩邊、下擺對齊下緣，對好後按確認。</p>
@@ -197,7 +197,7 @@
     </div>
   </div>
 </div>
- 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 // ============================================
@@ -218,7 +218,7 @@
 // 顏色彼此差異太大，或去背後保留/移除比例不合理），就整張圖不套用，
 // 自動退回「主色調素色」模式，避免效果崩壞或程式當掉。
 // ============================================
- 
+
 let scene, camera, renderer, mannequin;
 let isDragging = false, prevX = 0, autoRotate = true;
 // 主檢視畫面的縮放——跟「身高」參數分開處理。之前唯一能讓人偶變大的方式
@@ -242,7 +242,7 @@ function setViewZoom(z) {
 let currentTopColor = 0xd45050;
 let currentBottomColor = 0x2c3e6b;
 let currentSkinColor = 0xd8cfc2;
- 
+
 // 服裝配色調色盤，可自行增減
 const palette = [0xd45050, 0x2c3e6b, 0xe8c15a, 0x4a4a48, 0xf5f0e6, 0x6b8f71, 0xb37b8f, 0xffffff, 0x1a1a1a];
 // 膚色色階調色盤
@@ -250,13 +250,13 @@ const skinPalette = [
   0xffe0bd, 0xffcd94, 0xf1c27d, 0xe0ac69, 0xc68642, 0xb27a4b,
   0x8d5524, 0x7a4522, 0x6b3f2a, 0x5c3836, 0x4a2c26, 0x3b211c
 ];
- 
+
 // 目前選擇的剪裁狀態（花紋功能已移除，無照片時一律純素色——照片模式本來
 // 就是靠實際照片呈現花色/細節，花紋示意功能跟它的定位重疊，拿掉比較乾淨）
 let topShape = 'short';       // short / long / hoodie
 let bottomCategory = 'pants'; // pants / skirt
 let bottomStyle = 'long';     // pants: long/short；skirt: long/short
- 
+
 // 身材參數（純參數化縮放，不是3D掃描/人體重建）
 // 新增臀圍/肩寬：跟組長那邊的身形判斷（梨形等）用的量測項目對齊，同時
 // 讓褲子/裙子（臀圍）跟肩膀/袖子位置（肩寬）各自有自己的參數可調，
@@ -273,11 +273,11 @@ function getScales() {
     leg: Math.max(0.5, bodyParams.legLength / BASE_BODY.legLength)
   };
 }
- 
+
 // 正面＋背面照片（已去背處理過的canvas），null代表尚未成功套用
 let topFrontCanvas = null, topBackCanvas = null;
 let bottomFrontCanvas = null, bottomBackCanvas = null;
- 
+
 // 跟上衣（短袖/長袖）對齊的簡單邏輯：下著也是「長/短」二選一，褲子沿用
 // 原本窄褲的合身版型（寬褲/破洞褲拿掉，避免選項太多、剪裁差異又不是重點）
 const bottomStyleOptions = {
@@ -290,55 +290,55 @@ const bottomStyleOptions = {
     { key: 'short', label: '短裙' }
   ]
 };
- 
+
 // 目前場景中「上衣群組」與「下著群組」的所有mesh，切換剪裁/顏色/照片/身材時整組清除重建
 let topGroupParts = [];
 let bottomGroupParts = [];
- 
+
 function init() {
   const container = document.getElementById('canvas-container');
   const w = container.clientWidth, h = 380;
- 
+
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(35, w / h, 0.1, 100);
   camera.position.set(0, 1.0, VIEW_BASE_Z);
   camera.lookAt(0, 0.75, 0);
- 
+
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setSize(w, h);
   renderer.setPixelRatio(window.devicePixelRatio);
   container.appendChild(renderer.domElement);
- 
+
   scene.add(new THREE.AmbientLight(0xffffff, 0.75));
   const dir = new THREE.DirectionalLight(0xffffff, 0.9);
   dir.position.set(2, 4, 3);
   scene.add(dir);
- 
+
   buildMannequin();
- 
+
   // 拖曳旋轉邏輯：追蹤拖曳距離，直接旋轉3D物件
   container.addEventListener('pointerdown', (e) => { isDragging = true; prevX = e.clientX; autoRotate = false; container.style.cursor = 'grabbing'; });
   container.addEventListener('pointermove', (e) => { if (!isDragging) return; const d = e.clientX - prevX; mannequin.rotation.y += d * 0.012; prevX = e.clientX; });
   container.addEventListener('pointerup', () => { isDragging = false; container.style.cursor = 'grab'; });
   container.addEventListener('pointercancel', () => { isDragging = false; });
- 
+
   container.addEventListener('wheel', (e) => {
     e.preventDefault();
     setViewZoom(viewZoom * (e.deltaY < 0 ? 1.1 : 1 / 1.1));
   }, { passive: false });
   document.getElementById('viewZoomIn').addEventListener('click', () => setViewZoom(viewZoom * 1.2));
   document.getElementById('viewZoomOut').addEventListener('click', () => setViewZoom(viewZoom / 1.2));
- 
+
   window.addEventListener('resize', () => {
     const nw = container.clientWidth;
     camera.aspect = nw / h;
     camera.updateProjectionMatrix();
     renderer.setSize(nw, h);
   });
- 
+
   animate();
 }
- 
+
 // ============================================
 // 建立人偶骨架（頭、頸、手臂、腿），統一用可調整的膚色材質。
 // 腿部長度依「腿長」參數縮放；縮放後整個人偶再依「身高」參數等比例縮放。
@@ -348,15 +348,15 @@ function buildMannequin() {
   mannequin = new THREE.Group();
   const scales = getScales();
   const skinMat = new THREE.MeshStandardMaterial({ color: currentSkinColor });
- 
+
   const head = new THREE.Mesh(new THREE.SphereGeometry(0.16, 20, 20), skinMat);
   head.position.set(0, 1.55, 0);
   mannequin.add(head);
- 
+
   const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.12, 12), skinMat);
   neck.position.set(0, 1.35, 0);
   mannequin.add(neck);
- 
+
   // 手臂/手掌的x偏移依「肩寬」縮放——肩寬變大，手臂在骨架上的接點就往外移，
   // 視覺上肩膀變寬；buildTop()裡的袖子對齊邏輯也要用同一套scales.shoulder，
   // 否則肩寬一變，骨架手臂跟外層袖子的位置會對不齊、穿幫。
@@ -369,7 +369,7 @@ function buildMannequin() {
     hand.position.set(side * 0.42 * scales.shoulder, 0.63, 0);
     mannequin.add(hand);
   });
- 
+
   // 腿部：以髖部(y=0.275)為固定接點，長度依腿長參數縮放，往下延伸/縮短
   const legHeight = 0.85 * scales.leg;
   const legTopY = 0.275;
@@ -382,29 +382,29 @@ function buildMannequin() {
     foot.position.set(side * 0.13, legCenterY - legHeight / 2 - 0.025, 0.06);
     mannequin.add(foot);
   });
- 
+
   // 除錯用（不影響畫面）：把骨架關鍵尺寸暴露到window上，方便寫自動化腳本
   // 檢查「衣服半徑是否確實包住骨架」，不用每次改參數都靠肉眼截圖比對。
   window.__geo = window.__geo || {};
   window.__geo.skinLeg = { rTop: 0.07, rBottom: 0.06, height: legHeight, topY: legTopY };
   window.__geo.arm = { rTop: 0.045, rBottom: 0.04, height: 0.62 };
- 
+
   scene.add(mannequin);
- 
+
   buildTop();
   buildBottom();
- 
+
   // 其餘部位（頭、手臂等）用身高比例整體縮放；胸圍/腰圍/腿長已在各自幾何裡單獨處理過
   mannequin.scale.set(scales.overall, scales.overall, scales.overall);
 }
- 
+
 // 無照片時的素色材質（花紋功能已移除：花紋示意本來就是為了在沒有照片時
 // 給使用者一點花色感，但現在照片模式才是真正呈現花色/細節的地方，兩者
 // 定位重疊，拿掉花紋讓「有照片=照片，沒照片=純色塊」這件事更單純）
 function solidMaterial(colorHex) {
   return new THREE.MeshStandardMaterial({ color: colorHex });
 }
- 
+
 // 口袋這類「同色系裝飾」如果用跟衣服完全一樣的顏色，從正面看幾乎會被相同
 // 顏色蓋過去、幾乎看不見（沒有照片級材質陰影可以區分出輪廓）。把顏色稍微
 // 加深一點模擬車縫/布料層次感，讓口袋在純色模式下真的看得到。
@@ -414,7 +414,7 @@ function shadeColor(colorHex, factor) {
   const b = Math.round((colorHex & 0xff) * factor);
   return (r << 16) | (g << 8) | b;
 }
- 
+
 // 正面/背面照片貼圖材質。故意用完全不透明的材質（見chromaKeyCanvas，去背
 // 後的背景像素是「填成衣服前景平均色」而不是「變透明」）——原本用alphaTest
 // 挖透明洞、搭配DoubleSide，結果照片背景占比越大（例如衣服沒有整個拍滿畫
@@ -445,7 +445,7 @@ function createPhotoMaterial(canvas, uv) {
   // alphaTest屬於「非0即1」的裁切，不進入透明排序佇列，不會有這個問題。
   return new THREE.MeshBasicMaterial({ map: tex, alphaTest: 0.5 });
 }
- 
+
 // 算出「把寬度width、從start開始的一段圖片範圍，壓縮顯示在表面U軸中央
 // frac比例的範圍內，範圍外clamp到圖片邊緣」所需要的texture repeat/offset。
 // ------------------------------------------------------------------
@@ -474,7 +474,7 @@ function computeNarrowUV(frac, width, start) {
   const offsetX = start - width * (1 - frac) / (2 * frac);
   return { repeatX, offsetX };
 }
- 
+
 // 計算canvas中「非透明像素」的平均色，讓袖子/帽子等沒有貼照片的部位
 // 可以取用跟照片相近的顏色，視覺上比較不突兀（仍是色塊，不是照片本身）。
 function averageOpaqueColor(canvas) {
@@ -489,7 +489,7 @@ function averageOpaqueColor(canvas) {
   r = Math.round(r / n); g = Math.round(g / n); b = Math.round(b / n);
   return (r << 16) | (g << 8) | b;
 }
- 
+
 // ============================================
 // 上衣：軀幹圓柱體（照片模式=前後半貼圖／素色模式=完整圓柱體）
 // + 袖子（短袖/長袖，恆用色塊，不貼照片）+ 帽子/拉鍊（連帽外套限定）
@@ -498,7 +498,7 @@ function averageOpaqueColor(canvas) {
 function buildTop() {
   topGroupParts.forEach((p) => mannequin.remove(p));
   topGroupParts = [];
- 
+
   const scales = getScales();
   const isHoodie = topShape === 'hoodie';
   const baseRTop = isHoodie ? 0.24 : 0.22;
@@ -506,9 +506,14 @@ function buildTop() {
   const torsoHeight = isHoodie ? 0.74 : 0.7;
   const rTop = baseRTop * scales.bust;
   const rBottom = baseRBottom * scales.waist;
- 
+
+  // 記錄上衣下擺半徑，供buildBottom()把「褲頭/裙頭」半徑跟這個對齊——見
+  // buildBottom()裡的說明，這是修「長裙穿模」那個bug用的。
+  window.__geo = window.__geo || {};
+  window.__geo.topBottomR = rBottom;
+
   const topPhotoReady = !!(topFrontCanvas && topBackCanvas);
- 
+
   if (topPhotoReady) {
     const torsoUV = computeNarrowUV(1, 1, 0); // 整張照片完整鋪滿前/後半圓柱體，見computeNarrowUV註解
     const front = new THREE.Mesh(
@@ -529,20 +534,20 @@ function buildTop() {
     mannequin.add(torso);
     topGroupParts.push(torso);
   }
- 
+
   // 袖子顏色：照片模式下自動取樣正面照片的平均色，讓沒有貼照片的部位不要太突兀
   const sleeveColor = topPhotoReady ? averageOpaqueColor(topFrontCanvas) : currentTopColor;
   const sleeveMatMaker = () => solidMaterial(topPhotoReady ? sleeveColor : currentTopColor);
- 
+
   const isShort = topShape === 'short';
   const sleeveHeight = isShort ? 0.32 : 0.66;
   const sRTop = isHoodie ? 0.06 : 0.055;
   const sRBottom = isHoodie ? 0.052 : (isShort ? 0.05 : 0.048);
- 
+
   // 手臂骨架的中心點/高度（要跟buildMannequin()裡建立手臂時用的數字保持一致，
   // 否則下面「讓袖子頂端對齊肩膀」的算法會跟著跑掉）
   const armCenterX = 0.34 * scales.shoulder, armCenterY = 0.95, armHeight = 0.62;
- 
+
   [-1, 1].forEach((side) => {
     const sleeve = new THREE.Mesh(
       new THREE.CylinderGeometry(sRTop, sRBottom, sleeveHeight, 10),
@@ -562,12 +567,12 @@ function buildTop() {
     mannequin.add(sleeve);
     topGroupParts.push(sleeve);
   });
- 
+
   // 除錯用（不影響畫面）：暴露目前上衣相關的實際尺寸給自動化檢查腳本用
   window.__geo = window.__geo || {};
   window.__geo.sleeve = { rTop: sRTop, rBottom: sRBottom, height: sleeveHeight };
   window.__geo.torso = { rTop, rBottom, height: torsoHeight, isHoodie };
- 
+
   // 連帽外套額外加一個掛在領口後方的帽子（簡單幾何示意，同樣不貼照片）。
   // 帽子的尺寸/位置要跟著胸圍縮放——原本是寫死的常數，胸圍拉到很大時領口
   // （軀幹頂端半徑）會膨脹很多，但帽子沒有跟著變大/往後移，結果帽子被
@@ -584,7 +589,7 @@ function buildTop() {
     mannequin.add(hood);
     topGroupParts.push(hood);
   }
- 
+
   // 領口/胸前小裝飾，只在「沒有照片」時加——有照片的話衣服上本來就有的
   // 拉鍊/口袋細節照片裡就看得到了，不需要另外疊一層假的幾何形狀上去
   // （疊上去反而會跟真實照片的細節對不上、看起來更奇怪）。
@@ -596,7 +601,7 @@ function buildTop() {
       const frac = (torsoTopY - y) / torsoHeight;
       return rTop + (rBottom - rTop) * frac;
     };
- 
+
     if (isHoodie) {
       // 連帽外套是「外套」，加一條從領口到下擺的拉鍊（沿著軀幹的錐度走，
       // 用跟正/背面照片切割一樣的技巧：取一小段極窄的圓柱體弧面，
@@ -625,7 +630,7 @@ function buildTop() {
       pocket.position.set(pocketX, pocketY, pocketR * 0.97);
       mannequin.add(pocket);
       topGroupParts.push(pocket);
- 
+
       // 釦子：沿著前襟中線（x=0）從領口排到下擺，用torsoRadiusAt()讓每顆
       // 釦子都精確貼在軀幹表面上（半徑隨高度內插，不會浮空或插進衣服裡）。
       const buttonCount = 5;
@@ -646,7 +651,7 @@ function buildTop() {
     // （拉鍊）跟襯衫（釦子+口袋）上才有意義。
   }
 }
- 
+
 // ============================================
 // 下著：褲子類（長褲/短褲，統一窄版合身剪裁）或裙子類（長裙/短裙）
 // 照片模式：每個部位（褲子每一腳／裙子）切成前後兩半分別貼正面/背面照片。
@@ -655,15 +660,15 @@ function buildTop() {
 function buildBottom() {
   bottomGroupParts.forEach((p) => mannequin.remove(p));
   bottomGroupParts = [];
- 
+
   const scales = getScales();
   const bottomPhotoReady = !!(bottomFrontCanvas && bottomBackCanvas);
- 
+
   // 除錯用（不影響畫面）：每次重建先清掉舊的下著尺寸紀錄，避免類別切換後殘留
   window.__geo = window.__geo || {};
   delete window.__geo.pantsLeg;
   delete window.__geo.skirt;
- 
+
   if (bottomCategory === 'pants') {
     // 統一沿用原本「窄褲」的合身版型（拿掉寬褲/破洞褲，剪裁差異不是重點，
     // 選項太多反而增加使用者負擔）；長褲/短褲只差在褲管長度。
@@ -691,19 +696,19 @@ function buildBottom() {
     const skinLegTopR = 0.07, skinLegBottomR = 0.06, coverMargin = 0.024;
     rBottom = Math.max(rBottom, skinLegBottomR + coverMargin);
     rTop = Math.max(rTop, skinLegTopR + coverMargin, rBottom + 0.005);
- 
+
     const legHeight = legHeightBase * scales.leg;
     const legCenterY = 0.55 - legHeight / 2; // 腰線固定在y=0.55
- 
+
     // 除錯用（不影響畫面）：暴露目前褲管的實際尺寸給自動化檢查腳本用
     window.__geo = window.__geo || {};
     window.__geo.pantsLeg = { rTop, rBottom, height: legHeight, topY: 0.55, style: bottomStyle };
- 
+
     // 褲管的x位置要跟buildMannequin()裡骨架腿的x位置(0.13)對齊，否則兩個圓柱體
     // 中心點沒對準，半徑差距小的剪裁會露出一截外側的腿——這正是上一輪窄褲
     // 外側穿幫的原因，這裡統一用同一個常數避免兩處數字各自維護、對不齊。
     const legX = 0.13;
- 
+
     [-1, 1].forEach((side) => {
       if (bottomPhotoReady) {
         // 上傳的一張褲子照片是「兩條褲管都在同一張圖裡」，之前的做法是把整張
@@ -738,14 +743,14 @@ function buildBottom() {
         bottomGroupParts.push(leg);
       }
     });
- 
+
     // 拉鍊/口袋：只在沒有照片時加，理由跟上衣一樣——有照片時衣服上本來就有
     // 的細節照片裡已經看得到了，疊加假裝飾反而會跟真實照片對不上。
     if (!bottomPhotoReady) {
       // 拉鍊跟兩腿間縫合都試過，使用者反應看起來都有點怪，兩個都拿掉——
       // 兩腿之間本來就是視覺死角，硬要補一塊東西上去反而更顯眼、更不自然，
       // 乾脆保持空隙不處理，只留下面口袋這個視覺效果比較好的裝飾就好。
- 
+
       // 口袋：改成貼在褲管「外側」（而不是正前方置中），並且斜著擺放，
       // 比較接近真實長褲/短褲斜口袋的視覺印象。用角度(thetaOffset)把口袋
       // 沿著圓柱體表面往外側轉一點，再讓口袋本身也斜放，兩個旋轉疊加。
@@ -776,16 +781,30 @@ function buildBottom() {
     if (bottomStyle === 'long') { baseHeight = 0.85; rBottom = 0.32; }
     else { baseHeight = 0.25; rBottom = 0.36; } // short
     const height = baseHeight * scales.leg;
-    // 裙頭（rTop）貼著實際腰線，跟腰圍縮放合理；裙擺（rBottom）改成跟臀圍
-    // 縮放——裙擺垂到大腿/臀部附近，臀圍才是實際影響裙子在那個高度會不會
-    // 顯得太緊/太鬆的量測值，跟褲子的邏輯一致（見buildBottom的pants段落）。
-    const rTop = 0.2 * scales.waist;
+    // 裙頭（rTop）改成跟臀圍縮放，不再用腰圍——這裡承認前一版判斷錯了：
+    // 裙子/褲子在這個簡化模型裡是從y=0.55這條線開始往下（跟骨架髖部
+    // 對齊），這條線本來就是「臀線」而不是真正的腰線，跟褲子rTop用臀圍
+    // 縮放是同一個道理（見上面buildBottom pants段落）。裙擺（rBottom）
+    // 維持用臀圍，理由不變：保持裙子本身剪裁比例，不要讓單一參數只影響
+    // 局部造成比例跑掉。這樣「臀圍」才會在裙頭（使用者一眼就看得到、
+    // 貼著身體的地方）跟裙擺同時有感，而不是像上一版那樣只感覺到裙擺
+    // 變寬、裙頭沒反應。
+    let rTop = 0.2 * scales.hip;
     rBottom *= scales.hip;
+    // 「長裙穿模」bug修正：上衣下擺（torso rBottom）跟裙頭（這裡的rTop）
+    // 是兩個各自獨立算出來的半徑，理論上兩者在y=0.55這個高度應該要無縫
+    // 銜接，但baseRBottom(0.26/0.29)跟裙頭的0.2這兩個係數本來就不是同一個
+    //數字，兩者只要腰圍不是剛好卡在某個特定值，裙頭就會比上衣下擺窄一圈，
+    // 從某些旋轉角度看得到中間那圈「沒東西」的縫隙（背景透出來，穿模感）。
+    // 直接把裙頭半徑夾住、不小於上衣下擺半徑，確保這個接縫處永遠是「裙子
+    // 蓋住或至少貼齊上衣下擺」，不會有內縮的段差，不管身材參數怎麼組合。
+    if (window.__geo.topBottomR) rTop = Math.max(rTop, window.__geo.topBottomR);
+    rBottom = Math.max(rBottom, rTop); // 裙擺理當不會比裙頭窄，保底避免退化成倒圓錐
     const posY = 0.55 - height / 2;
- 
+
     // 除錯用（不影響畫面）：暴露目前裙子的實際尺寸給自動化檢查腳本用
     window.__geo.skirt = { rTop, rBottom, height, topY: 0.55, style: bottomStyle };
- 
+
     if (bottomPhotoReady) {
       const skirtUV = computeNarrowUV(1, 1, 0); // 整張照片完整鋪滿前/後半圓柱體，見computeNarrowUV註解
       // openEnded改成true：裙子上窄下寬（圓錐狀），若保留頂/底端蓋（cap），
@@ -811,13 +830,13 @@ function buildBottom() {
     }
   }
 }
- 
+
 function animate() {
   requestAnimationFrame(animate);
   if (autoRotate && !isDragging) mannequin.rotation.y += 0.006;
   renderer.render(scene, camera);
 }
- 
+
 // ============================================
 // 建立顏色選擇按鈕（上衣/下著素色模式用色、膚色用）
 // ============================================
@@ -836,7 +855,7 @@ function buildSwatches(containerId, onPick) {
     el.appendChild(b);
   });
 }
- 
+
 // ============================================
 // 通用的按鈕群組切換小工具：處理active樣式 + callback
 // ============================================
@@ -850,7 +869,7 @@ function wireToggle(containerEl, dataAttr, onSelect) {
     };
   });
 }
- 
+
 function renderBottomStyleToggle() {
   const el = document.getElementById('bottomStyleToggle');
   el.innerHTML = '';
@@ -865,7 +884,7 @@ function renderBottomStyleToggle() {
   });
   wireToggle(el, 'style', (val) => { bottomStyle = val; buildBottom(); });
 }
- 
+
 // ============================================
 // 身材參數輸入：即時讀值、做合理範圍防呆、觸發整個人偶重建
 // ============================================
@@ -879,7 +898,7 @@ function wireBodyParamInput(id, key, min, max) {
     buildMannequin();
   });
 }
- 
+
 // ============================================
 // 正面/背面照片上傳處理
 // ============================================
@@ -896,7 +915,7 @@ function loadImageFile(file) {
     reader.readAsDataURL(file);
   });
 }
- 
+
 // 把使用者框出來的矩形範圍（rect，原始照片像素座標）「拉伸」貼滿固定
 // 200x300的工作畫布——不是等比例縮放置中裁切，是刻意讓框框的四個邊直接
 // 對應畫布的四個邊。只要框選時讓衣領頂住框框上緣、兩邊袖口頂住框框左右
@@ -930,13 +949,13 @@ function buildCropCanvas(img, rect, guideKey) {
   if (guide) ctx.restore();
   return canvas;
 }
- 
+
 // slot: 'topFront' | 'topBack' | 'bottomFront' | 'bottomBack'
 async function handleGarmentPhotoUpload(file, slot) {
   const noteId = slot.startsWith('top') ? 'topPhotoNote' : 'bottomPhotoNote';
   const noteEl = document.getElementById(noteId);
   if (!file) return;
- 
+
   try {
     const img = await loadImageFile(file);
     // 上傳完先一定要經過手動框選（見openCropPicker），不直接進去背流程——
@@ -952,7 +971,7 @@ async function handleGarmentPhotoUpload(file, slot) {
     refreshPhotoStatusAndRebuild(slot.startsWith('top') ? 'top' : 'bottom');
   }
 }
- 
+
 // 框選完成後直接拿裁切結果當貼圖用，不再嘗試去背——「黏土包裹模具」的想法：
 // 使用者已經用框選明確告訴我們衣服在照片裡的範圍了，就不需要再讓演算法
 // 自己去猜「哪裡是背景」；框選輪廓以外的部分已經在buildCropCanvas階段被
@@ -968,7 +987,7 @@ function proceedAfterCrop(croppedCanvas, slot, noteEl) {
   noteEl.className = 'note';
   refreshPhotoStatusAndRebuild(slot.startsWith('top') ? 'top' : 'bottom');
 }
- 
+
 // ============================================
 // 裁切/對齊（每次上傳都會先跳出來，見cropOverlay的HTML註解）
 // 改用「固定衣服形狀輪廓，使用者拖曳/縮放照片本身去對齊」的方式，取代原本
@@ -1032,19 +1051,19 @@ const CROP_GUIDES = {
   skirtLong: { w: 200, h: 280, points: [[0.22, 0], [0.78, 0], [1, 1], [0, 1]] },
   skirtShort: { w: 220, h: 140, points: [[0.15, 0], [0.85, 0], [1, 1], [0, 1]] }
 };
- 
+
 let cropPick = {
   img: null, slot: null, noteEl: null, guideKey: 'topLong', bbox: null,
   baseScale: 1, zoom: 1, imgX: 0, imgY: 0, imgW: 0, imgH: 0,
   dragging: false, dragStart: null
 };
- 
+
 // 依guide自己的w/h，把它置中放進300x400的顯示畫布，算出實際bbox位置
 function bboxForGuide(guideKey) {
   const g = CROP_GUIDES[guideKey];
   return { x: (300 - g.w) / 2, y: (400 - g.h) / 2, w: g.w, h: g.h };
 }
- 
+
 function drawCropCanvas() {
   const canvas = document.getElementById('cropCanvas');
   const ctx = canvas.getContext('2d');
@@ -1052,11 +1071,11 @@ function drawCropCanvas() {
   ctx.fillStyle = '#eee';
   ctx.fillRect(0, 0, cw, ch);
   ctx.drawImage(cropPick.img, cropPick.imgX, cropPick.imgY, cropPick.imgW, cropPick.imgH);
- 
+
   const points = CROP_GUIDES[cropPick.guideKey].points;
   const bbox = cropPick.bbox;
   const toCanvas = (p) => [bbox.x + p[0] * bbox.w, bbox.y + p[1] * bbox.h];
- 
+
   // 輪廓外蓋一層半透明黑色遮罩（用evenodd規則挖出輪廓形狀的洞），只留輪廓
   // 內清楚可見，視覺上更容易確認照片對準的位置對不對。
   ctx.fillStyle = 'rgba(0,0,0,0.45)';
@@ -1068,7 +1087,7 @@ function drawCropCanvas() {
   });
   ctx.closePath();
   ctx.fill('evenodd');
- 
+
   ctx.strokeStyle = '#ff5050';
   ctx.lineWidth = 2;
   ctx.beginPath();
@@ -1079,14 +1098,14 @@ function drawCropCanvas() {
   ctx.closePath();
   ctx.stroke();
 }
- 
+
 // 依目前的slot/topShape/bottomCategory/bottomStyle決定要套用哪個輪廓形狀
 function guideKeyForSlot(slot) {
   if (slot.startsWith('top')) return topShape === 'short' ? 'topShort' : 'topLong';
   if (bottomCategory === 'skirt') return bottomStyle === 'short' ? 'skirtShort' : 'skirtLong';
   return bottomStyle === 'short' ? 'pantsShort' : 'pantsLong';
 }
- 
+
 // 重置成「照片蓋滿輪廓外接矩形」的初始狀態（cover-fit，置中）
 function resetCropTransform() {
   const img = cropPick.img, bbox = cropPick.bbox;
@@ -1098,7 +1117,7 @@ function resetCropTransform() {
   cropPick.imgX = bbox.x + bbox.w / 2 - cropPick.imgW / 2;
   cropPick.imgY = bbox.y + bbox.h / 2 - cropPick.imgH / 2;
 }
- 
+
 function openCropPicker(img, slot, noteEl) {
   const guideKey = guideKeyForSlot(slot);
   cropPick = {
@@ -1111,11 +1130,11 @@ function openCropPicker(img, slot, noteEl) {
   document.getElementById('cropOverlay').style.display = 'flex';
   drawCropCanvas();
 }
- 
+
 function closeCropPicker() {
   document.getElementById('cropOverlay').style.display = 'none';
 }
- 
+
 function cropZoomBy(factor) {
   const cx = cropPick.imgX + cropPick.imgW / 2, cy = cropPick.imgY + cropPick.imgH / 2;
   cropPick.zoom = Math.max(0.3, Math.min(5, cropPick.zoom * factor));
@@ -1125,7 +1144,7 @@ function cropZoomBy(factor) {
   cropPick.imgY = cy - cropPick.imgH / 2;
   drawCropCanvas();
 }
- 
+
 // 把固定輪廓外接矩形（畫布座標）依目前照片的平移/縮放，反推回原始照片的
 // 像素座標，並clamp在照片實際範圍內（使用者如果縮放/拖曳到輪廓沒被照片
 // 完全蓋住，避免算出負值/超界）。
@@ -1134,10 +1153,10 @@ function clampRectToImage(x, y, w, h, img) {
   x = Math.max(0, x); y = Math.max(0, y);
   return { x, y, w: Math.max(1, x2 - x), h: Math.max(1, y2 - y) };
 }
- 
+
 function wireCropUI() {
   const canvas = document.getElementById('cropCanvas');
- 
+
   function posFromEvent(e) {
     const rect = canvas.getBoundingClientRect();
     return {
@@ -1145,7 +1164,7 @@ function wireCropUI() {
       y: (e.clientY - rect.top) * (canvas.height / rect.height)
     };
   }
- 
+
   canvas.addEventListener('pointerdown', (e) => {
     if (!cropPick.img) return;
     cropPick.dragging = true;
@@ -1167,16 +1186,16 @@ function wireCropUI() {
     e.preventDefault();
     cropZoomBy(e.deltaY < 0 ? 1.08 : 1 / 1.08);
   }, { passive: false });
- 
+
   document.getElementById('cropZoomIn').addEventListener('click', () => { if (cropPick.img) cropZoomBy(1.15); });
   document.getElementById('cropZoomOut').addEventListener('click', () => { if (cropPick.img) cropZoomBy(1 / 1.15); });
- 
+
   document.getElementById('cropReset').addEventListener('click', () => {
     if (!cropPick.img) return;
     resetCropTransform();
     drawCropCanvas();
   });
- 
+
   document.getElementById('cropCancel').addEventListener('click', () => {
     setPhotoSlot(cropPick.slot, null);
     if (cropPick.noteEl) {
@@ -1187,7 +1206,7 @@ function wireCropUI() {
     closeCropPicker();
     refreshPhotoStatusAndRebuild(cropPick.slot.startsWith('top') ? 'top' : 'bottom');
   });
- 
+
   document.getElementById('cropConfirm').addEventListener('click', () => {
     const effScale = cropPick.baseScale * cropPick.zoom;
     const bbox = cropPick.bbox;
@@ -1205,13 +1224,13 @@ function wireCropUI() {
     proceedAfterCrop(croppedCanvas, slot, noteEl);
   });
 }
- 
+
 function setPhotoSlot(slot, canvasOrNull) {
   if (slot === 'topFront') topFrontCanvas = canvasOrNull;
   else if (slot === 'topBack') topBackCanvas = canvasOrNull;
   else if (slot === 'bottomFront') bottomFrontCanvas = canvasOrNull;
   else if (slot === 'bottomBack') bottomBackCanvas = canvasOrNull;
- 
+
   // 用自己控制的狀態文字取代原生<input type=file>的檔名顯示——原生欄位在
   // 我們清空value（讓使用者可以重新選同一個檔案）之後，一定會變回「未選擇
   // 任何檔案」，就算照片其實套用成功了也一樣，這是瀏覽器內建行為沒辦法
@@ -1219,13 +1238,13 @@ function setPhotoSlot(slot, canvasOrNull) {
   const statusEl = document.getElementById(slot + 'Status');
   if (statusEl) statusEl.textContent = canvasOrNull ? '✓ 已套用' : '';
 }
- 
+
 function refreshPhotoStatusAndRebuild(which) {
   const noteId = which === 'top' ? 'topPhotoNote' : 'bottomPhotoNote';
   const noteEl = document.getElementById(noteId);
   const frontOk = which === 'top' ? !!topFrontCanvas : !!bottomFrontCanvas;
   const backOk = which === 'top' ? !!topBackCanvas : !!bottomBackCanvas;
- 
+
   if (frontOk && backOk) {
     noteEl.textContent = '已套用正+背面照片模式';
     noteEl.className = 'note ok';
@@ -1233,33 +1252,33 @@ function refreshPhotoStatusAndRebuild(which) {
     noteEl.textContent = '只有一面照片可用時不會硬套全包覆，仍使用素色模式，等兩面都成功才會切換';
     noteEl.className = 'note';
   }
- 
+
   if (which === 'top') buildTop(); else buildBottom();
 }
- 
+
 // ---- 初始化 ----
 init();
 buildSwatches('skinColors', (c) => { currentSkinColor = c; buildMannequin(); });
 buildSwatches('topColors', (c) => { currentTopColor = c; buildTop(); });
 buildSwatches('bottomColors', (c) => { currentBottomColor = c; buildBottom(); });
- 
+
 wireToggle(document.getElementById('topShapeToggle'), 'shape', (val) => { topShape = val; buildTop(); });
 wireToggle(document.getElementById('bottomCategoryToggle'), 'cat', (val) => {
   bottomCategory = val;
   renderBottomStyleToggle();
   buildBottom();
 });
- 
+
 renderBottomStyleToggle();
 buildBottom();
- 
+
 wireBodyParamInput('bp-height', 'height', 120, 200);
 wireBodyParamInput('bp-bust', 'bust', 60, 130);
 wireBodyParamInput('bp-waist', 'waist', 50, 120);
 wireBodyParamInput('bp-hip', 'hip', 60, 140);
 wireBodyParamInput('bp-shoulder', 'shoulder', 28, 52);
 wireBodyParamInput('bp-leg', 'legLength', 50, 110);
- 
+
 // 注意：這裡故意不在change當下就清空input.value——原本這樣做是為了解決
 // 「同一個檔案的<input type=file>如果value沒變，重選同一個檔案不會觸發
 // change事件」的問題，但副作用是選好檔案後，欄位顯示的檔名會立刻被清成
@@ -1277,7 +1296,7 @@ wirePhotoInput('topFrontInput', 'topFront');
 wirePhotoInput('topBackInput', 'topBack');
 wirePhotoInput('bottomFrontInput', 'bottomFront');
 wirePhotoInput('bottomBackInput', 'bottomBack');
- 
+
 // 清除鍵：把某一面的照片復原成「沒有上傳過」的狀態，改用素色模式。
 // 之前沒有這個功能，套用了不滿意的照片結果後只能重新選一張照片檔案去蓋掉，
 // 沒辦法直接清空恢復素色——這裡把「清空」跟「重新選檔案」拆成兩個獨立操作。
@@ -1296,9 +1315,9 @@ wireClearButton('topFrontClear', 'topFrontInput', 'topFront');
 wireClearButton('topBackClear', 'topBackInput', 'topBack');
 wireClearButton('bottomFrontClear', 'bottomFrontInput', 'bottomFront');
 wireClearButton('bottomBackClear', 'bottomBackInput', 'bottomBack');
- 
+
 wireCropUI();
 </script>
- 
+
 </body>
 </html>
